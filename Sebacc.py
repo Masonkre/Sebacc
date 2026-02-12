@@ -29,35 +29,46 @@ class Table:
 class Hand:
     def __init__(self):
         self.cards = []
+        self.chips = []
+        self.value = int(0)
 
     def add_card(self, card):
         self.cards.append(card)
-        card.index = len(self.cards) - 1
+        card.index = len(self.cards)
 
     def displayCards(self):
         print("--- Cards in Hand ---")
-        for card in hand.cards:
-            print(f'{card.index + 1}.', card.suit, card.rank)
+        for card in self.cards:
+            print(f'{card.index}.', card.suit, card.rank)
         print('\n')
 
     def gain(self, deck: object):
         self.add_card(deck.deal_card())
         areDiscarding = input('Do you want to to discard a card?: ').lower() in ('yes','y')
-        print('Gain Phase')
         if areDiscarding:
             self.discard(deck)
+            print(f'Card gained: {self.cards[-1].suit} {self.cards[-1].rank} ')
         return
     
-    def discard(self, deck):
+    def discard(self, deck: object):
         self.displayCards()
-        discardIndex = int(input('Which card would you like to discard? (1,2,etc.)')) 
-        deck.discardPile.append(self.cards.pop(discardIndex-1))
-        print(f'Card gained: {self.cards[-1].suit} {self.cards[-1].rank} ')
+        discardIndex = int(input('Which card would you like to discard? (1,2,etc.): ')) 
+        deck.discardPile.append(self.cards.pop(discardIndex - 1))
+
+    def swap(self, deck: object):
+        self.displayCards()
+        #swapIndex = int(input('Which card would you like to swap with? (1,2,etc.): '))
+        self.discard(deck)
+        self.add_card(deck.discardPile.pop(-2))
+        self.displayCards()
+
 
 def startGame():
     deck = Table()
     deck.shuffle()
     hand = Hand()
+
+    deck.discardPile.append(deck.deal_card())
 
     '''
     /// Print statement for checking cards in deck
@@ -87,17 +98,19 @@ while playing:
             print(f'--- {phase} Phase ---')
             if phase == 'Turn':
                 action = input('Gain, Swap, Stand, or Junk?')[:2].lower()
-                print(action)
                 if action == 'ga':
                     hand.gain(deck)
 
-                if action == 'sw':
+                if action == 'sw': # Swap cards with top card of discard pile
                     print('Swapping')
+                    hand.swap(deck)
 
                 if action == 'st':
                     print('Standing')
                     pass
             
+                if action == 'ju':
+                    print('Junking')
 
         if round == 4:
             print('--- Showdown ---')
