@@ -4,7 +4,6 @@ class Card:
     def __init__(self, suit, rank):
         self.suit = suit
         self.rank = rank
-        #self.index = None
 
 class Table:
     def __init__(self):
@@ -34,7 +33,6 @@ class Hand:
 
     def add_card(self, card):
         self.cards.append(card)
-        #card.index = len(self.cards)
 
     def reIndex(self):
         for card in self.cards:
@@ -59,26 +57,17 @@ class Hand:
         deck.discardPile.append(self.cards.pop(discardIndex - 1))
 
     def swap(self, deck: object):
-        #swapIndex = int(input('Which card would you like to swap with? (1,2,etc.): '))
         self.discard(deck)
         self.add_card(deck.discardPile.pop(-2))
-
 
 def startGame():
     deck = Table()
     deck.shuffle()
     hand = Hand()
     deck.discardPile.append(deck.deal_card())
-    '''
-    /// Print statement for checking cards in deck
-    for i in range(80):
-        print(deck.deck[i].suit)
-        print(deck.deck[i].rank)
-    '''
     hand.add_card(deck.deal_card())
     hand.add_card(deck.deal_card())
     return deck, hand
-
 
 playing = True
 while playing:
@@ -93,7 +82,6 @@ while playing:
             print('--- Showdown ---')
             break
         
-
         for phase in phases:
             print(f'--- {phase} Phase ---')
             if phase == 'Turn':
@@ -102,28 +90,18 @@ while playing:
                     hand.gain(deck)
 
                 if action == 'sw': # Swap cards with top card of discard pile
-                    print('Swapping')
                     hand.swap(deck)
 
                 if action == 'st':
                     print('Standing')
-                    pass
+                    continue
             
-                if action == 'ju': # Find a way 
-                    print('Junking')
+                if action == 'ju':
                     break
+
+                else:
+                    raise ValueError("Please type at least the first two letters of the" \
+                                    "action you are trying to take.")
             hand.displayCards()
             
     playing = input('--- Want to play another round? (y/n) --- ').lower() in ('yes','y')
-
-
-'''
-/// Print statement for checking cards in hand
-for i in range(2):
-    #print('\n', i)
-    #print(hand.hand[i-1].suit)
-    #print(hand.hand[i-1].rank)
-'''
-
-#if __name__ == "__main__":
-#    game()
